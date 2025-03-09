@@ -1,6 +1,7 @@
 "use client";
 
 import { ModeToggle } from "./dark-mode";
+import { useEffect, useState } from 'react';
 import {
   ClerkProvider,
   SignInButton,
@@ -10,25 +11,43 @@ import {
   UserButton,
 } from '@clerk/nextjs'
 // @ts-ignore
-import { BoomBox, LayoutDashboard } from "lucide-react";
+import { BoomBox, LayoutDashboard } from "lucide-react"; 
 import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation"; // Changed from next/router to next/navigation
+import { useUser } from "@clerk/nextjs";
 import Link from "next/link";
+import HomePage from "../app/(pages)/home"; 
+import { AuthButton } from "./(auth)/authButton";
+import MusicNotesHoverEffect from "@/components/ui/effects/musicNotesHoverEffects";
 
 export default function Home() {
   return (
     <div className="p-3">
       <Navbar />
-      <HeroSection />
+      <HomePage />
+      
     </div>
   );
 }
 
 function Navbar() {
+  const [isMounted, setIsMounted] = useState(false);
+  const { user, isLoaded } = useUser();
+  
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  // Don't render anything on the server to prevent hydration issues
+  if (!isMounted) {
+    return null;
+  }
+
   return (
     <div className="flex m-5 mx-8 items-center justify-between flex-wrap">
       <AppLogo />
       <div className="flex gap-4 items-center flex-wrap justify-center md:justify-start">
-      <Link href="/" className="hover:underline">
+        <Link href="/" className="hover:underline">
           Home
         </Link>
         <Link href="/about" className="hover:underline">
@@ -37,14 +56,14 @@ function Navbar() {
       </div>
       <div className="flex gap-4 items-center flex-wrap justify-end">
         <ModeToggle />
-        <Button className="whitespace-nowrap h-11 px-3">Get Started</Button>
-        <SignedOut>
-              <SignInButton />
-              <SignUpButton />
-            </SignedOut>
-            <SignedIn>
-              <UserButton />
-            </SignedIn>
+        
+        <AuthButton 
+          loggedInText="Let's go"
+          loggedOutText="Get Started"
+          className="whitespace-nowrap h-11 px-3"
+        />
+        
+        {isLoaded && user && <UserButton />}
       </div>
     </div>
   );
@@ -52,39 +71,22 @@ function Navbar() {
 
 function AppLogo() {
   return (
+    <MusicNotesHoverEffect>
     <div className="flex items-center justify-between space-x-2 mt-1">
       <div className="flex gap-2 items-center">
         <div className="w-11 h-11 bg-primary rounded-md flex items-center justify-center">
-          {/* #<LayoutDashboard className="text-primary-foreground" /> */}
-          <BoomBox  className="text-primary-foreground"/>
+          <BoomBox className="text-primary-foreground" />
         </div>
-        <h1 className={"text-[20px] flex gap-1 max-md:hidden"}>
-          <span className="font-bold">JaMoveo</span>
+        <h1 className="text-[20px] flex gap-1 max-md:hidden">
+          
+            <span className="font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary-foreground">
+              JaMoveo
+            </span>
+          
         </h1>
       </div>
     </div>
+    </MusicNotesHoverEffect>
   );
 }
 
-function HeroSection() {
-  return (
-    <div className="flex flex-col items-center justify-center text-center py-20 px-4 mt-20 md:mt-36">
-      <h1 className="text-4xl md:text-5xl font-bold mb-4"
-      style={{
-        background: "linear-gradient(90deg, hsl(192.3913043478261, 82.88%, 56.47%) 0%, hsl(192.3913043478261, 82.88%, 10%) 100%)",
-        WebkitBackgroundClip: "text", 
-        color: "transparent",
-      }}
-      >
-        JaMoveo – Jam at the Speed of Sound!
-      </h1>
-      <p className="text-lg  mb-8 mx-0 md:mx-44">
-        Join the ultimate smart rehearsal experience with JaMoveo! <br /> 
-         A web app that lets every musician connect, view chords and lyrics in real-time,<br /> 
-          and take jam sessions to the next level.<br /> 
-           It’s time to make music like never before!<br/> 
-      </p>
-      <Button className="h-12">Let's get Jamming</Button>
-    </div>
-  );
-}
