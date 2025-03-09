@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { AuthButton } from "../(auth)/authButton";
+import MusicNotesHoverEffect from "@/components/ui/effects/musicNotesHoverEffects";
 
 export default function HomePage() {
   const router = useRouter();
@@ -20,6 +21,7 @@ export default function HomePage() {
       >
         JaMoveo – Jam at the Speed of Sound!
       </h1>
+      <MusicNotesHoverEffect>
       <p className="text-lg mb-8 mx-0 md:mx-44">
         Join the ultimate smart rehearsal experience with JaMoveo! <br />
         A web app that lets every musician connect, view chords and lyrics in real-time,<br />
@@ -30,6 +32,7 @@ export default function HomePage() {
         className="h-12" 
         loggedOutText="Let's get Jamming"
       />
+      </MusicNotesHoverEffect>
     </div>
   );
 }

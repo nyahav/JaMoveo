@@ -21,6 +21,8 @@ import {
 import "./globals.css";
 import { ThemeProvider } from "./theme-provider";
 import { Toaster } from "react-hot-toast";
+import Navbar from "@/components/layout/navbar";
+
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -81,7 +83,7 @@ export default function RootLayout({
          ${lato.variable} ${playfairDisplay.variable} 
           antialiased relative`}
       >
-       
+       <Navbar />
         <Toaster />
         <ThemeProvider
           attribute="class"
