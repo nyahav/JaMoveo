@@ -18,7 +18,7 @@ interface AuthButtonProps {
 export function AuthButton({
   loggedInText = "Let's go",
   loggedOutText = "Get Started",
-  loggedInRoute = "/main",
+  loggedInRoute = "/main-player",
   className = "",
   children
 }: AuthButtonProps) {

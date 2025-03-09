@@ -1,12 +1,8 @@
-// Results Page - Admin:
-// ● The page should contain a list of search results with relevant data
-// (song name, artist, and image if available). Once a song is selected, the
-// screen should move to the Live page for the admin as well.
 "use client";
 
 import { useEffect, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import { io, Socket } from "socket.io-client";
+import { useSocket } from '@/app/hooks/useSocket';
 
 interface Song {
   name: string;
@@ -15,36 +11,30 @@ interface Song {
 }
 
 export default function ResultAdmin() {
+  const socket = useSocket();
   const searchParams = useSearchParams();
   const searchQuery = searchParams.get("search") || "";
   const [songs, setSongs] = useState<Song[]>([]);
-  const [socket, setSocket] = useState<Socket | null>(null);
   const router = useRouter();
 
   useEffect(() => {
-    // Fetch song data from API
     fetch(`/api/songs?search=${encodeURIComponent(searchQuery)}`)
       .then((res) => res.json())
       .then((data) => setSongs(data))
       .catch((err) => console.error("Error loading songs:", err));
-
-    // Initialize Socket.io
-    fetch("/api/socket").catch((err) => console.error("Socket Init Error:", err));
-    const newSocket = io({ path: "/api/socket" });
-    setSocket(newSocket);
-
-    return () => {
-      newSocket.disconnect();
-    };
   }, [searchQuery]);
 
-  // Handle song selection
   const handleSongSelect = (selectedSong: Song) => {
     if (socket) {
-      socket.emit("song-selected", selectedSong);
-      console.log("Song selected:", selectedSong);
+      // Emit song selection event to all connected clients
+      socket.emit('song-selected', selectedSong);
+      console.log('Song selection emitted:', selectedSong.name);
+      
+      // Navigate to live page
+      router.push(`/live?song=${encodeURIComponent(selectedSong.name)}`);
+    } else {
+      console.error('Socket connection not available');
     }
-    router.push(`/live-admin?song=${encodeURIComponent(selectedSong.name)}`);
   };
 
   return (

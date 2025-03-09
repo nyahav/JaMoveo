@@ -1,12 +1,21 @@
 import { clerkMiddleware } from '@clerk/nextjs/server'
+import { socketMiddleware } from './socketmiddleware' 
+import { NextFetchEvent } from 'next/server';
+import { NextRequest } from 'next/server';
 
-export default clerkMiddleware()
+export default function middleware(req: NextRequest) {
+  // First, check for socket routes
+  const socketResponse = socketMiddleware(req);
+  
+  // If socket middleware returns a non-200 response, stop processing
+  if (socketResponse.status !== 200) {
+    return socketResponse;
+  }
+
+  // Otherwise, apply Clerk authentication middleware
+  return clerkMiddleware(req, {} as NextFetchEvent);
+}
 
 export const config = {
-  matcher: [
-    // Skip Next.js internals and all static files, unless found in search params
-    '/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)',
-    // Always run for API routes
-    '/(api|trpc)(.*)',
-  ],
-}
+  matcher: ['/((?!.*\\..*|_next).*)', '/', '/(api|trpc)(.*)'],
+};
