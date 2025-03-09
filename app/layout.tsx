@@ -22,6 +22,7 @@ import "./globals.css";
 import { ThemeProvider } from "./theme-provider";
 import { Toaster } from "react-hot-toast";
 import Navbar from "@/components/layout/navbar";
+import { UserProvider } from "./context/UserContext";
 
 
 const poppins = Poppins({
@@ -76,6 +77,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <ClerkProvider >
+        <UserProvider>
       <body
         className={`${poppins.variable}
          ${roboto.variable} ${openSans.variable} 
@@ -96,6 +98,7 @@ export default function RootLayout({
           
         </ThemeProvider>
       </body>
+      </UserProvider>
       </ClerkProvider>
     </html>
   );
