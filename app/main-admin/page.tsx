@@ -56,7 +56,8 @@ export default function MainAdmin() {
 
     // Main admin UI
     return (
-        <div className="flex flex-col items-center justify-center h-screen bg-gray-900 text-white">
+        <div className="flex flex-col items-center justify-center min-h-screen bg-gray-900 text-white">
+            <h1 className="text-5xl font-bold mb-8">Hey band leader,ready to rock on?</h1>
             <h1 className="text-3xl font-bold mb-4">Search any song...</h1>
 
             <input

@@ -93,23 +93,29 @@ const MusicNotesLoadingAnimation: React.FC<{
       setCurrentPhraseIndex((prevIndex) => (prevIndex + 1) % phrases.length);
     }, phraseChangeInterval);
 
-    return () => clearInterval(phraseInterval);
+    return () => clearInterval(phraseInterval); // Ensure cleanup
   }, [phrases, phraseChangeInterval]);
 
-  // Simulate loading progress
+  // Simulate loading progress with faster speed
   useEffect(() => {
     const progressInterval = setInterval(() => {
       setLoadingProgress((prev) => {
-        const newProgress = prev + (1 - prev / 100) * 0.05;
-        return newProgress >= 95 ? 95 + Math.random() * 5 : newProgress;
+        const newProgress = prev + (1 - prev / 100) * 0.1; // Faster increment
+        return newProgress >= 100 ? 100 : newProgress; // Cap at 100
       });
-    }, 200);
+    }, 100); // Faster interval (100ms instead of 200ms)
 
-    return () => clearInterval(progressInterval);
+    return () => clearInterval(progressInterval); // Ensure cleanup
   }, []);
 
+  // Manually change phrase
+  const handleChangePhrase = () => {
+    const nextIndex = (currentPhraseIndex + 1) % phrases.length;
+    setCurrentPhraseIndex(nextIndex);
+  };
+
   return (
-    <div className="relative w-full h-64 md:h-80 flex flex-col items-center justify-center overflow-hidden bg-gradient-to-b from-black to-gray-900 rounded-lg p-4">
+    <div className="relative w-96 h-64 flex flex-col items-center justify-center overflow-hidden bg-gradient-to-b from-black to-gray-900 rounded-lg p-4">
       {/* Music notes animation */}
       {notes.map((note) => (
         <div
@@ -140,8 +146,14 @@ const MusicNotesLoadingAnimation: React.FC<{
             style={{ width: `${loadingProgress}%` }}
           />
         </div>
-        
-        
+
+        {/* Button to change phrase */}
+        <button
+          onClick={handleChangePhrase}
+          className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all duration-300"
+        >
+          Change Phrase
+        </button>
       </div>
     </div>
   );
