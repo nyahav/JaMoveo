@@ -1,30 +1,10 @@
-"use client";
-
+// app/layout.tsx
 import type { Metadata } from "next";
-import {
-  ClerkProvider,
-  SignInButton,
-  SignUpButton,
-  SignedIn,
-  SignedOut,
-  UserButton,
-} from '@clerk/nextjs'
-import {
-  Lato,
-  Montserrat,
-  Open_Sans,
-  Playfair,
-  Poppins,
-  Raleway,
-  Roboto,
-} from "next/font/google";
+import { Inter, Lato, Montserrat, Open_Sans, Playfair, Poppins, Raleway, Roboto } from "next/font/google";
 import "./globals.css";
-import { ThemeProvider } from "./theme-provider";
-import { Toaster } from "react-hot-toast";
-import Navbar from "@/components/layout/navbar";
-import { UserProvider } from "./context/UserContext";
+import RootLayoutClient from "./layout-client";
 
-
+// Font definitions
 const poppins = Poppins({
   subsets: ["latin"],
   weight: ["400", "500", "700"],
@@ -63,21 +43,22 @@ const playfairDisplay = Playfair({
   variable: "--font-playfair",
 });
 
-// export const metadata: Metadata = {
-//   title: "JaMoveo App", 
-//   description: "gather in a rehearsal rooms from time to time and play songs together", 
-// };
+// Metadata definition
+export const metadata: Metadata = {
+  title: "JaMoveo",
+  description: "Gather in rehearsal rooms and play songs together",
+  icons: {
+    icon: '/favicon.ico',
+  }
+};
 
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
- 
   return (
     <html lang="en" suppressHydrationWarning>
-      <ClerkProvider >
-        <UserProvider>
       <body
         className={`${poppins.variable}
          ${roboto.variable} ${openSans.variable} 
@@ -85,21 +66,8 @@ export default function RootLayout({
          ${lato.variable} ${playfairDisplay.variable} 
           antialiased relative`}
       >
-       <Navbar />
-        <Toaster />
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-         
-          {children}
-          
-        </ThemeProvider>
+        <RootLayoutClient>{children}</RootLayoutClient>
       </body>
-      </UserProvider>
-      </ClerkProvider>
     </html>
   );
 }

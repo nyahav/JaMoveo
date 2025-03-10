@@ -102,16 +102,39 @@ export default function LivePage() {
         ref={containerRef}
         className="w-full max-w-4xl mx-auto h-[70vh] overflow-y-auto text-2xl leading-relaxed"
       >
-        {songData.content.map((line, lineIndex) => (
-          <div key={lineIndex} className="mb-6">
-            {line.map((part, partIndex) => (
-              <span key={partIndex} className="mx-1">
-                <span className="text-white">{part.lyrics}</span>
-                {!isVocalist && part.chords && (
-                  <span className="text-yellow-500 ml-1">{part.chords}</span>
-                )}
-              </span>
-            ))}
+        {songData?.content.map((line, lineIndex) => (
+          <div key={lineIndex} className="mb-8">
+            {/* Chords line */}
+            {!isVocalist && (
+              <div className="h-6 mb-1">
+                {line.map((part, partIndex) => (
+                  <span 
+                    key={`chord-${partIndex}`}
+                    className="inline-block text-yellow-500"
+                    style={{
+                      width: part.lyrics.length * 16, // Approximate width based on lyrics
+                      marginRight: '4px',
+                      textAlign: part.chords ? 'center' : 'left'
+                    }}
+                  >
+                    {part.chords || ''}
+                  </span>
+                ))}
+              </div>
+            )}
+            
+            {/* Lyrics line */}
+            <div>
+              {line.map((part, partIndex) => (
+                <span 
+                  key={`lyric-${partIndex}`}
+                  className="inline-block text-white"
+                  style={{ marginRight: '4px' }}
+                >
+                  {part.lyrics}
+                </span>
+              ))}
+            </div>
           </div>
         ))}
       </div>

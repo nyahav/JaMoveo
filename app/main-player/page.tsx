@@ -18,13 +18,14 @@ interface InstrumentOption {
 }
 
 const instrumentOptions: InstrumentOption[] = [
-  { name: "Guitar" },
-  { name: "Bass" },
-  { name: "Vocals" },
-  { name: "Drums" },
-  { name: "Sax" },
-  { name: "Keyboard" },
-];
+    { name: "Guitar", image: "/instruments/guitar.svg" },
+    { name: "Bass", image: "/instruments/bass.svg" },
+    { name: "Vocals", image: "/instruments/vocal.svg" },
+    { name: "Drums", image: "/instruments/drums.svg" },
+    { name: "Sax", image: "/instruments/sax.svg" },
+    { name: "Keyboard", image: "/instruments/keyboard.svg" },
+  ];
+  
 
 export default function MainPage() {
   const { user } = useUser();
@@ -37,19 +38,42 @@ export default function MainPage() {
   const [songSelected, setSongSelected] = useState(false);
 
   useEffect(() => {
-    if (!socket) return;
-    socket.on("admin-connected", () => {
-        setAdminConnected(true);
+    if (socket) {
+      const checkAdminInterval = setInterval(() => {
+        console.log("Waiting for admin to connect...");
+  
+        socket.emit("check-admin-status");
+  
+        socket.on('admin-status', (data) => {
+            setAdminConnected(true);
+            console.log('Player received admin status:', data);
+            clearInterval(checkAdminInterval); 
+          });
+
+        socket.on("admin-connected", () => {
+          setAdminConnected(true);
+          console.log("Admin is connected!");
+          clearInterval(checkAdminInterval); 
+        });
+      }, 2000); // Adjust interval time as needed
+  
+      socket.on('song-update', (data) => {
+        console.log('Player received song update:', data);
+        if (data.redirect) {
+          setTimeout(() => {
+            router.push(`/live?song=${encodeURIComponent(data.name)}`);
+          }, 2000); 
+        }
       });
-
-    socket.on('song-selected', () => {
-      console.log('Song was selected!');
-    });
-
-    return () => {
-      socket.off('song-selected');
-    };
-  }, [socket]);
+  
+      return () => {
+        socket?.off('song-update');
+        socket?.off("admin-connected");
+        clearInterval(checkAdminInterval);
+      };
+    }
+  }, [socket, router]);
+ 
 
   useEffect(() => {
     if (user?.id) {
@@ -145,18 +169,30 @@ export default function MainPage() {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center text-center py-20 px-4 mt-20 md:mt-36">
+    <div className="flex flex-col items-center justify-center text-center  px-4 mt-10 md:mt-36">
       {/* Check if the user has selected an instrument */}
-      {userData.instrument ? (
-        <div>
-          <h1>Welcome!</h1>
-          <p>Your Instrument: {userData.instrument}</p>
-        </div>
+    {userData.instrument ? (
+      <div>
+        <h1>Welcome!</h1>
+        <p>Your Instrument: {userData.instrument}</p>
+        {instrumentOptions
+          .filter(instrument => instrument.name === userData.instrument)
+          .map(instrument => (
+            <div key={instrument.name} className="mt-4 text-xl">
+              <img
+                src={instrument.image}
+                alt={instrument.name}
+                className="w-32 h-32 object-contain rounded-md mb-2"
+              />
+              <h3 className="text-lg font-semibold">{instrument.name}</h3>
+            </div>
+          ))}
+      </div>
       ) : (
         <div>
           <h1>Welcome!</h1>
           <p>Please select your instrument:</p>
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 mt-4">
+          <div className="grid grid-cols-3 sm:grid-cols-3  gap-4 mt-4">
             {instrumentOptions.map((instrument) => (
               <div
                 key={instrument.name}
@@ -166,7 +202,7 @@ export default function MainPage() {
                 <img
                   src={instrument.image}
                   alt={instrument.name}
-                  className="w-full h-32 object-cover rounded-md mb-2"
+                  className="w-32 h-32 object-contain rounded-md mb-2"
                 />
                 <h3 className="text-lg font-semibold">{instrument.name}</h3>
               </div>
@@ -176,7 +212,7 @@ export default function MainPage() {
       )}
 
       {/* Waiting Room with Admin connection and Song Selection */}
-      <div className="flex flex-col items-center justify-center h-screen bg-black text-white">
+      <div className="flex flex-col items-center justify-center mt-10">
         <h1 className="text-3xl font-bold mb-4">
           {adminConnected
             ? "Waiting for the next song..."

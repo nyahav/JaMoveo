@@ -58,7 +58,7 @@ const technologies = [
 export default function Page() {
   return (
     <div className="p-8">
-      <h1 className="text-3xl font-bold mb-8 text-center">Technologies We Used in this App</h1>
+      <h1 className="text-3xl font-bold mb-8 text-center mx-auto">Technologies We Used in this App</h1>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {technologies.map((tech) => (
           <TechnologyCard key={tech.name} {...tech} />

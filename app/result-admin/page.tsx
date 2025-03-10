@@ -26,7 +26,7 @@ export default function ResultAdmin() {
 
   const handleSongSelect = (selectedSong: Song) => {
     if (socket) {
-      // Emit song selection event to all connected clients
+      
       socket.emit('song-selected', selectedSong);
       console.log('Song selection emitted:', selectedSong.name);
       

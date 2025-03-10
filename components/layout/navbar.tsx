@@ -1,4 +1,4 @@
-import { ModeToggle } from "@/app/dark-mode";
+//import { ModeToggle } from "@/app/dark-mode";
 import { MdElectricBolt } from "react-icons/md";
 import { useEffect, useState } from 'react';
 
@@ -37,7 +37,7 @@ export default function Navbar() {
         </Link>
       </div>
       <div className="flex gap-4 items-center flex-wrap justify-end">
-        <ModeToggle />
+        {/* <ModeToggle /> */}
         
         <AuthButton 
           loggedInText="Let's go"
@@ -54,20 +54,20 @@ export default function Navbar() {
 function AppLogo() {
   return (
     <MusicNotesHoverEffect>
-    <div className="flex items-center justify-between space-x-2 mt-1">
-      <div className="flex gap-2 items-center">
-        <div className="w-11 h-11 bg-primary rounded-md flex items-center justify-center">
-          <BoomBox className="text-primary-foreground" />
+      <div className="flex items-center justify-between space-x-2 mt-1">
+        <div className="flex gap-2 items-center">
+          <div className="w-15 h-15 bg-primary rounded-xl flex items-center justify-center">
+            <img src="/favicon.ico" alt="App Icon" className="w-15 h-15" />
+          </div>
+          <h1 className="text-[20px] flex gap-1 max-md:hidden">
+            <Link href="/" className="hover:underline">
+              <span className="font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary-foreground">
+                JaMoveo
+              </span>
+            </Link>
+          </h1>
         </div>
-        <h1 className="text-[20px] flex gap-1 max-md:hidden">
-          <Link href="/" className="hover:underline">
-            <span className="font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary-foreground">
-              JaMoveo
-            </span>
-          </Link>
-        </h1>
       </div>
-    </div>
     </MusicNotesHoverEffect>
   );
 }

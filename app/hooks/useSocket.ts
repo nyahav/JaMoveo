@@ -5,25 +5,31 @@ export function useSocket() {
   const [socket, setSocket] = useState<Socket | null>(null);
 
   useEffect(() => {
-    const socketInstance = io('http://localhost:3001', {
-      path: '/api/socket',
-      transports: ['websocket', 'polling']
+    console.log('Attempting socket connection...');
+    const socketInstance = io({
+      path: '/api/socketio',
+      addTrailingSlash: false,
     });
 
     socketInstance.on('connect', () => {
-      console.log('Socket connected:', socketInstance.id);
+      console.log('Connected to socket server:', socketInstance.id);
     });
 
     socketInstance.on('connect_error', (error) => {
       console.error('Socket connection error:', error);
     });
 
+    socketInstance.on('admin-status', (data) => {
+      console.log('Received admin status:', data);
+    });
+    socketInstance.on('song-selected', (data) => {
+      console.log('song-selected:', data);
+    });
+
     setSocket(socketInstance);
 
     return () => {
-      if (socketInstance) {
-        socketInstance.disconnect();
-      }
+      if (socketInstance) socketInstance.disconnect();
     };
   }, []);
 
