@@ -39,6 +39,11 @@ app.prepare().then(() => {
       });
     });
 
+    socket.on('quit-session', () => {
+      console.log('Admin quit-session:');
+      io.emit('session-ended');
+    });
+
     socket.on('disconnect', () => {
       console.log('Client disconnected:', socket.id);
       if (socket.data.isAdmin) {

@@ -9,13 +9,15 @@ import { useRouter } from "next/navigation";
 import { UserButton, useUser } from "@clerk/nextjs";
 import Link from "next/link";
 import { AuthButton } from "@/app/(auth)/authButton";
+import { useUserContext } from "@/app/context/UserContext";
 import MusicNotesHoverEffect from "@/components/ui/effects/musicNotesHoverEffects";
 
 
 export default function Navbar() {
   const [isMounted, setIsMounted] = useState(false);
   const { user, isLoaded } = useUser();
-  
+  const { userRole } = useUserContext();
+
   useEffect(() => {
     setIsMounted(true);
   }, []);
@@ -27,18 +29,34 @@ export default function Navbar() {
 
   return (
     <div className="flex m-5 mx-8 items-center justify-between flex-wrap">
+
       <AppLogo />
-      <div className="flex gap-4 items-center flex-wrap justify-center md:justify-start">
-        <Link href="/" className="hover:underline">
+      <div className="flex gap-6 items-center flex-wrap justify-center md:justify-start my-4">
+        <Link
+          href="/"
+          className="text-gray-800 font-semibold text-xl hover:text-blue-600 transition-colors duration-200 relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-blue-600 hover:after:w-full after:transition-all after:duration-300"
+        >
           Home
         </Link>
-        <Link href="/about" className="hover:underline">
+        <Link
+          href="/about"
+          className="text-gray-800 font-semibold text-xl hover:text-blue-600 transition-colors duration-200 relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-blue-600 hover:after:w-full after:transition-all after:duration-300"
+        >
           About
         </Link>
+        {/* Admin Link - Only shown to admin users */}
+        {userRole === 'admin' && (
+          <Link
+            href="/main-admin"
+            className="text-gray-800 font-semibold text-xl hover:text-blue-600 transition-colors duration-200 relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-blue-600 hover:after:w-full after:transition-all after:duration-300"
+          >
+            Create Session
+          </Link>
+        )}
       </div>
       <div className="flex gap-4 items-center flex-wrap justify-end">
         {/* <ModeToggle /> */}
-        
+
         <AuthButton 
           loggedInText="Let's go"
           loggedOutText="Get Started"

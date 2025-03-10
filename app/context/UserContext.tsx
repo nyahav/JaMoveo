@@ -1,36 +1,60 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
+"use client";
+
+import { createContext, useContext, useEffect, useState } from "react";
 import { useUser } from "@clerk/nextjs";
 
-// Create a context with a default value
-const UserContext = createContext<any>(null);
+interface UserContextType {
+  userRole: "admin" | "user";
+  isLoaded: boolean;
+}
 
-export const UserProvider = ({ children }: { children: React.ReactNode }) => {
-  const { user, isLoaded } = useUser();
-  const [userId, setUserId] = useState<string | null>(null);
-  const [userRole, setUserRole] = useState<string | null>(null); // To hold the role (e.g., admin)
+const UserContext = createContext<UserContextType>({
+  userRole: "user",
+  isLoaded: false,
+});
+
+export function UserProvider({ children }: { children: React.ReactNode }) {
+  const { user, isLoaded: clerkLoaded } = useUser();
+  const [userRole, setUserRole] = useState<"admin" | "user">("user");
+  const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
-    if (isLoaded && user) {
-      setUserId(user.id);
-      // Assuming 'role' is stored in publicMetadata
-      setUserRole(typeof user.publicMetadata?.role === 'string' ? user.publicMetadata.role : null); 
-      console.log('User ID:', user.id);
-      console.log('User role:', userRole);
+    async function checkAndSetUserRole() {
+      if (user?.id) {
+        // Check if user exists in database
+        const res = await fetch(`/api/user?userId=${user.id}`);
+        
+        if (res.status === 404) {
+          // Create new user if not found
+          const isAdmin = user.id.toLowerCase().includes('admin');
+          const createRes = await fetch('/api/user', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              userId: user.id,
+              role: isAdmin ? 'admin' : 'user'
+            })
+          });
+          const newUser = await createRes.json();
+          setUserRole(newUser.role as "admin" | "user");
+        } else {
+          const userData = await res.json();
+          setUserRole(userData.role as "admin" | "user");
+        }
+      }
+      setIsLoaded(true);
     }
-  }, [isLoaded, user]);
+
+    if (clerkLoaded) {
+      checkAndSetUserRole();
+    }
+  }, [user?.id, clerkLoaded]);
 
   return (
-    <UserContext.Provider value={{ userId, user, isLoaded, userRole }}>
+    <UserContext.Provider value={{ userRole, isLoaded }}>
       {children}
     </UserContext.Provider>
   );
-};
+}
 
-// Create a custom hook to use the UserContext
-export const useUserContext = () => {
-  const context = useContext(UserContext);
-  if (context === null) {
-    throw new Error("useUserContext must be used within a UserProvider");
-  }
-  return context;
-};
+export const useUserContext = () => useContext(UserContext);

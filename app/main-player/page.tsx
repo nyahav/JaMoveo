@@ -6,11 +6,13 @@ import { useRouter } from "next/navigation";
 import { io, Socket } from "socket.io-client";
 import { Button } from "@/components/ui/button";
 import { useSocket } from '@/app/hooks/useSocket';
+import MusicNotesLoadingAnimation from "@/components/ui/effects/musicNoteLoadingAnimation";
 
 interface UserData {
-  name: string;
-  instrument: string;
-}
+    userId: string;
+    role: string;
+    instrument?: string;
+  }
 
 interface InstrumentOption {
   name: string;
@@ -91,13 +93,15 @@ export default function MainPage() {
               return fetch("/api/user", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ userId: user.id }),
+                body: JSON.stringify({ 
+                  userId: user.id,
+                  role: "user" 
+                }),
               }).then((postRes) => postRes.json());
             }
 
             throw new Error(errorData || "Failed to fetch");
           }
-
           return res.json();
         })
         .then((data) => {
@@ -111,53 +115,31 @@ export default function MainPage() {
           setLoading(false);
         });
     }
-  }, [user?.id, router]);
+  }, [user?.id]);
 
   const handleSelectInstrument = (instrument: string) => {
-    if (user?.id) {
-      // First check if user exists
-      fetch(`/api/user?userId=${user.id}`)
-        .then(async (res) => {
-          if (res.status === 404) {
-            // User doesn't exist, create new user with instrument
-            return fetch("/api/user", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                userId: user.id,
-                name: user.firstName || "User",
-                instrument: instrument,
-              }),
-            });
-          } else {
-            // User exists, update instrument
-            return fetch("/api/user", {
-              method: "PUT", // Use PUT for updates
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                userId: user.id,
-                instrument: instrument,
-              }),
-            });
-          }
-        })
-        .then((res) => {
-          if (!res.ok) {
-            throw new Error('Failed to update instrument');
-          }
-          return res.json();
-        })
-        .then((data) => {
-          console.log("Updated user data:", data);
-          setUserData((prevData) => ({
-            ...prevData!,
-            instrument: instrument,
-          }));
-        })
-        .catch((error) => {
-          console.error("Error updating instrument:", error);
-        });
-    }
+    if (!user?.id) return;
+
+    fetch(`/api/user?userId=${user.id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ instrument }),
+    })
+      .then(async (res) => {
+        if (!res.ok) {
+          const errorData = await res.text();
+          console.error("Update error:", errorData);
+          throw new Error('Failed to update instrument');
+        }
+        return res.json();
+      })
+      .then((data) => {
+        console.log("Updated user data:", data);
+        setUserData(data);
+      })
+      .catch((error) => {
+        console.error("Error updating instrument:", error);
+      });
   };
 
   if (loading) {
@@ -222,7 +204,7 @@ export default function MainPage() {
         {/* Admin Connection Indicator */}
         <div className="flex items-center space-x-2">
           <span
-            className={`px-4 py-2 rounded-lg font-bold ${
+            className={`px-4 py-2 mb-4 rounded-lg font-bold ${
               adminConnected ? "bg-green-600" : "bg-red-600"
             }`}
           >
@@ -236,6 +218,7 @@ export default function MainPage() {
             Song Selected! Redirecting to Live...
           </div>
         )}
+        <MusicNotesLoadingAnimation />
       </div>
     </div>
   );
