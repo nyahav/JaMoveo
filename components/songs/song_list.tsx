@@ -7,7 +7,7 @@ interface SongListProps {
   searchQuery: string;
 }
 
-export default function SongList({ songs, onSongSelect, isLoading, searchQuery }: SongListProps) {
+export default function SongList({ songs, onSongSelect }: SongListProps) {
   return (
       <div>
           {songs.map((song, index) => (

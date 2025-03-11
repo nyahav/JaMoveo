@@ -1,7 +1,7 @@
 
 
 
-// @ts-ignore
+//"@ts-expect-error"
 import { useEffect, useState } from 'react';
 import { UserButton, useUser } from "@clerk/nextjs";
 import Link from "next/link";
