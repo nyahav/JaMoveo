@@ -123,37 +123,54 @@ if (!isLoaded) {
 }
 
 
-  return (
-    <div className="min-h-screen p-8">
-      <h1 className="text-5xl font-bold mb-8">Hey band leader, ready to rock on?</h1>
-      <h1 className="text-3xl font-bold mb-4">Search any song or artist...</h1>
-      <form onSubmit={handleSearch} className="mb-6">
-        <div className="flex gap-2">
-          <input
-            type="text"
-            name="query"
-            value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)} // Update input value only
-            placeholder="Search for songs..."
-            className="flex-1 p-2 border rounded"
-          />
-          <button
-            type="submit"
-            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-          >
-            Search
-          </button>
+    return (
+        <div className="min-h-screen p-8">
+            <h1 
+            className="text-6xl font-bold mb-8"
+            style={{
+                background:
+                  "linear-gradient(90deg, hsl(192.3913043478261, 82.88%, 56.47%) 0%, hsl(192.3913043478261, 82.88%, 10%) 100%)",
+                WebkitBackgroundClip: "text",
+                color: "transparent",
+              }}>Hey band leader, ready to rock on?</h1>
+            <h1 className="text-3xl font-bold mb-4">Search any song or artist...</h1>
+            <form onSubmit={handleSearch} className="mb-6">
+                <div className="flex gap-2">
+                    <input
+                        type="text"
+                        name="query"
+                        value={inputValue}
+                        onChange={(e) => setInputValue(e.target.value)} // Update input value only
+                        placeholder="Search for songs..."
+                        className="flex-1 p-2 border rounded"
+                    />
+                    <button
+                        type="submit"
+                        className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                    >
+                        Search
+                    </button>
+                </div>
+            </form>
+
+            {isLoading ? (
+                <div className="flex items-center justify-center py-8">
+                    <h2 className="text-2xl font-semibold">Fetching...</h2>
+                </div>
+            ) : songs.length === 0 ? (
+                <div className="flex items-center justify-center py-8">
+                    <h2 className="text-2xl font-semibold">No songs found for "{searchQuery}"</h2>
+                </div>
+            ) : (
+                <SongList
+                    songs={songs}
+                    onSongSelect={handleSongClick}
+                    isLoading={isLoading}
+                    searchQuery={searchQuery}
+                />
+            )}
+
+            <SongDetailsComponent songDetails={chosenSong} />
         </div>
-      </form>
-      
-      <SongList 
-        songs={songs} 
-        onSongSelect={handleSongClick} 
-        isLoading={isLoading}
-        searchQuery={searchQuery}
-      />
-      
-      <SongDetailsComponent songDetails={chosenSong} />
-    </div>
-  );
+    );
 }

@@ -2,6 +2,50 @@
 
 Welcome to **JaMoveo**, the ultimate interactive band rehearsal web app! Take your jam sessions to the next level with real-time lyrics and chord displays, seamless collaboration, and an intuitive interface designed for musicians.
 
+
+🚀 How to Use the App
+To get started quickly, you can use the following test accounts:
+
+Admin Credentials:
+
+Username: checkingadmin
+Password: checkingadmin
+User Credentials:
+
+Username: superuserdo
+Password: superuserdont
+Step-by-Step Guide
+1️⃣ Log In
+
+Open the app in two separate browsers or devices.
+Log in with the Admin credentials on one device and the User credentials on the other.
+2️⃣ Enter the Waiting Room
+
+After logging in, the User should click "Let's Go" to enter the waiting room.
+The Admin will then join to start the session.
+3️⃣ Start a Session
+
+The Admin should click "Create Session" (located at the top of the screen).
+The User will receive a notification that the session has started.
+4️⃣ Select a Song
+
+The Admin can search for songs using the Tab4U search feature.
+Once a song is selected, both the Admin and User will be automatically redirected to the Live Session page.
+5️⃣ Jam Together! 🎸🎶
+
+On the Live Session page, both users will see real-time lyrics and chords displayed.
+Enjoy a seamless, synchronized jam session!
+
+🆕 Creating a New Account
+If you want to create your own user account, follow these steps:
+
+Click the "Get Started" button in the top-right corner or navigate to:
+👉 /sign-up
+
+To create an Admin account, use the special registration path:
+👉 /sign-up-admin
+
+After signing up through this path, you will automatically be granted Admin privileges.
 ---
 
 ## 🌟 Features
@@ -127,7 +171,48 @@ Follow these steps to set up **JaMoveo** on your local machine:
 *Coming soon!*
 
 ---
+## 🚀 Feature Enhancements & New Features
+🎤 Live Chat for Players
+Add an in-session chat feature so band members can communicate in real time while playing.
+Allow text-based messaging for coordination (e.g., "Let's play the chorus twice!").
+Consider voice chat for a more immersive experience.
 
+🎭 Admin Controls & Player Management
+See Connected Players Before the Session Starts:
+Display a list of online users (including their selected instrument).
+Allow the admin to manage players (e.g., kick, mute, or highlight a musician).
+Session Permissions:
+Let admins assign roles (e.g., lead singer, drummer, guitarist).
+Restrict who can control song selection or settings.
+
+🔎 Enhanced Song Selection & Playlists
+Save Favorite Songs: Let users create a personal or shared song list for easy access.
+Pre-define Setlists: Admins can prepare setlists before a session starts.
+AI-Powered Song Suggestions: Recommend songs based on previous choices.
+
+📊 Real-Time Player Stats & Insights
+Show chord progression analytics (e.g., "80% of the session was spent in C major").
+Track player engagement (e.g., "You played 5 songs this session!").
+Provide a history log of past sessions.
+
+🔄 More Real-Time Enhancements
+Live Song Key/Tempo Adjustments: Allow transposing keys on the fly.
+Custom Scroll Speed for Lyrics: Users can adjust how fast lyrics/chords scroll.
+Metronome Integration: Keep everyone in sync with an optional built-in metronome.
+
+🛠️ Improved UI & UX
+Dark Mode Toggle: Add a switch for users who prefer a dark theme.
+Instrument-Specific Themes: Different interface color schemes based on instrument type.
+Gesture Controls for Mobile: Swipe up/down for scrolling, double-tap to pause lyrics.
+
+🌎 Cloud & Cross-Platform Sync
+Save user preferences in the cloud (e.g., last played song, preferred scrolling speed).
+Let users sync across multiple devices seamlessly.
+
+📹 Live Video Integration (Advanced)
+If you want to go all-in, add a video feed option so players can see each other while jamming!
+
+---
 ## 👨‍💻 Creator
 Project developed by **[Yahav Nir](https://github.com/YOUR-GITHUB)**. Feel free to reach out for collaboration or feedback! 🎸🔥
 

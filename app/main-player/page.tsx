@@ -7,6 +7,8 @@ import { useRouter } from "next/navigation";
 import { useSocket } from '@/app/hooks/useSocket';
 import MusicNotesLoadingAnimation from "@/components/ui/effects/musicNoteLoadingAnimation";
 import Image from "next/image";
+import toast from "react-hot-toast";
+import { useUserContext } from "../context/UserContext";
 
 interface UserData {
     userId: string;
@@ -35,11 +37,25 @@ export default function MainPage() {
   const socket = useSocket();
   const [userData, setUserData] = useState<UserData | null>(null);
   const [loading, setLoading] = useState(true);
+  const { userRole, isLoaded } = useUserContext();
   //const [socket, setSocket] = useState<Socket | null>(null);
   const [adminConnected, setAdminConnected] = useState(false);
 /* eslint-disable @typescript-eslint/no-unused-vars */
   const [songSelected, setSongSelected] = useState(false);
 /* eslint-enable @typescript-eslint/no-unused-vars */
+
+
+useEffect(() => {
+  if (isLoaded) {
+    if (!user) {
+      router.push("/sign-in");
+    } else if (!userRole) {
+      // User is signed in but has no role assigned
+      router.push("/unauthorized");
+    }
+  }
+}, [isLoaded, userRole, user, router]);
+
   useEffect(() => {
     if (!socket) return; // Exit if no socket
   
@@ -66,9 +82,12 @@ export default function MainPage() {
       }
     };
     const handleSongSelectedLive = (data: any) => {
-      console.log("Player received song update:", data);    
-      router.push(`/live`);
-    }
+      console.log("Player received song update:", data);
+      toast.success("Band leader has selected a song");
+      setTimeout(() => {
+        router.push(`/live`);
+      }, 3000);
+    };
     socket.on("admin-status", handleAdminStatus);
     //socket.on("song-selected", handleSongSelected);
     socket.on("live-player", handleSongSelectedLive);
@@ -149,16 +168,31 @@ export default function MainPage() {
       });
   };
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
+  
 
   if (!userData) {
     return <div>No user data found</div>;
   }
+  if (!isLoaded || !user) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <MusicNotesLoadingAnimation />
+        <div className="text-xl ml-4">Checking authorization...</div>
+      </div>
+    );
+  }
+  if (!userRole) {
+    router.push("/unauthorized");
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <div className="text-xl">Unauthorized access. Redirecting...</div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col items-center justify-center text-center  px-4 mt-10 md:mt-36">
+      
       {/* Check if the user has selected an instrument */}
     {userData.instrument ? (
       <div>
