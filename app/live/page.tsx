@@ -230,33 +230,38 @@ function LivePageContent() {
       </div>
 
       {/* Button Container */}
-      <div className="fixed bottom-20 left-8 right-8 flex justify-between px-4 pb-24">
-        {/* Auto Scroll Toggle Button */}
-        <button
-          onClick={() => setAutoScroll((prev) => !prev)}
-          className="p-4 bg-blue-600 rounded-full text-white text-xl shadow-lg hover:bg-blue-700 transition"
-        >
-          {autoScroll ? "Stop Scroll" : "Auto Scroll"}
-        </button>
+<div className="fixed bottom-20 left-8 right-8 flex justify-between px-6 pb-24 md:bottom-10 md:right-4 md:left-auto md:flex-col md:items-end">
+  {/* Auto Scroll Toggle Button */}
+  <button
+    onClick={() => setAutoScroll((prev) => !prev)}
+    className="px-6 py-3 bg-blue-600 rounded-lg text-white text-lg font-semibold shadow-md hover:bg-blue-700 transition-all duration-200 ease-in-out transform hover:scale-105
+               md:px-4 md:py-2 md:text-sm"
+  >
+    {autoScroll ? "Stop Scroll" : "Auto Scroll"}
+  </button>
 
-        {/* Vocalist Mode Toggle Button */}
-        <button
-          onClick={toggleVocalistMode}
-          className="p-4 bg-purple-600 rounded-full text-white text-xl shadow-lg hover:bg-purple-700 transition"
-        >
-          {isVocalist ? "Show Chords" : "Vocalist Mode"}
-        </button>
+  {/* Vocalist Mode Toggle Button */}
+  <button
+    onClick={toggleVocalistMode}
+    className="px-6 py-3 bg-purple-600 rounded-lg text-white text-lg font-semibold shadow-md hover:bg-purple-700 transition-all duration-200 ease-in-out transform hover:scale-105
+               md:px-4 md:py-2 md:text-sm mt-3 md:mt-2"
+  >
+    {isVocalist ? "Show Chords" : "Vocalist Mode"}
+  </button>
 
-        {/* Admin Quit Button */}
-        {userRole === "admin" && (
-          <button
-            onClick={handleQuit}
-            className="p-4 bg-red-600 rounded-full text-white text-xl shadow-lg hover:bg-red-700 transition"
-          >
-            Quit Session
-          </button>
-        )}
-      </div>
+  {/* Admin Quit Button */}
+  {userRole === "admin" && (
+    <button
+      onClick={handleQuit}
+      className="px-6 py-3 bg-red-600 rounded-lg text-white text-lg font-semibold shadow-md hover:bg-red-700 transition-all duration-200 ease-in-out transform hover:scale-105
+                 md:px-4 md:py-2 md:text-sm mt-3 md:mt-2"
+    >
+      Quit Session
+    </button>
+  )}
+</div>
+
+
     </div>
   );
 }

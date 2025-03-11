@@ -29,9 +29,7 @@ Welcome to **JaMoveo**, the ultimate interactive band rehearsal web app! Take yo
         <tr>
             <td>🎨 Design</td>
             <td>
-                <a href="https://www.framer.com/motion/">
-                    <img src="https://img.shields.io/badge/Framer%20Motion-%23EF4B4A.svg?style=for-the-badge&logo=framer&logoColor=white" alt="Framer Motion">
-                </a>
+                
                 <a href="https://tailwindcss.com/">
                     <img src="https://img.shields.io/badge/Tailwind%20CSS-%2338B2AC.svg?style=for-the-badge&logo=tailwind-css&logoColor=white" alt="Tailwind CSS">
                 </a>
