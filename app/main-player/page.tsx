@@ -236,7 +236,7 @@ useEffect(() => {
       )}
 
       {/* Waiting Room with Admin connection and Song Selection */}
-      <div className="flex flex-col items-center justify-center mt-10">
+      <div className="flex flex-col items-center justify-center mt-3">
         <h1 className="text-3xl font-bold mb-4">
           {adminConnected
             ? "Waiting for the next song..."

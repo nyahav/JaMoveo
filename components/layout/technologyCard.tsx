@@ -9,8 +9,8 @@ interface TechnologyCardProps {
 
 export default function TechnologyCard({ name, description, link, icon }: TechnologyCardProps) {
   return (
-    <div className="p-4 border rounded-lg shadow-md hover:shadow-lg transition-shadow">
-      <div className="text-center mb-4">
+    <div className="p-4 border rounded-lg shadow-md hover:shadow-lg transition-shadow relative">
+      <div className="absolute top-2 right-2">
         {icon}
       </div>
       <h2 className="text-xl font-semibold">{name}</h2>

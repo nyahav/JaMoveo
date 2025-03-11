@@ -147,7 +147,7 @@ Follow these steps to set up **JaMoveo** on your local machine:
 
 1. **Clone the Repository**  
    ```bash
-   git clone https://github.com/YOUR-USERNAME/JaMoveo.git
+   git clone https://github.com/nyahav/JaMoveo.git
    cd JaMoveo
    ```
 2. **Install Dependencies**  
