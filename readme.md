@@ -3,36 +3,36 @@
 Welcome to **JaMoveo**, the ultimate interactive band rehearsal web app! Take your jam sessions to the next level with real-time lyrics and chord displays, seamless collaboration, and an intuitive interface designed for musicians.
 
 
-🚀 How to Use the App
+## 🚀 How to Use the App
 To get started quickly, you can use the following test accounts:
 
 Admin Credentials:
-
 Username: checkingadmin
 Password: checkingadmin
-User Credentials:
 
+User Credentials:
 Username: superuserdo
 Password: superuserdont
-Step-by-Step Guide
-1️⃣ Log In
 
+## Step-by-Step Guide
+
+1️⃣ Log In
 Open the app in two separate browsers or devices.
 Log in with the Admin credentials on one device and the User credentials on the other.
-2️⃣ Enter the Waiting Room
 
+2️⃣ Enter the Waiting Room
 After logging in, the User should click "Let's Go" to enter the waiting room.
 The Admin will then join to start the session.
-3️⃣ Start a Session
 
+3️⃣ Start a Session
 The Admin should click "Create Session" (located at the top of the screen).
 The User will receive a notification that the session has started.
-4️⃣ Select a Song
 
+4️⃣ Select a Song
 The Admin can search for songs using the Tab4U search feature.
 Once a song is selected, both the Admin and User will be automatically redirected to the Live Session page.
-5️⃣ Jam Together! 🎸🎶
 
+5️⃣ Jam Together! 🎸🎶
 On the Live Session page, both users will see real-time lyrics and chords displayed.
 Enjoy a seamless, synchronized jam session!
 
@@ -44,8 +44,8 @@ Click the "Get Started" button in the top-right corner or navigate to:
 
 To create an Admin account, use the special registration path:
 👉 /sign-up-admin
-
 After signing up through this path, you will automatically be granted Admin privileges.
+
 ---
 
 ## 🌟 Features
@@ -73,7 +73,6 @@ After signing up through this path, you will automatically be granted Admin priv
         <tr>
             <td>🎨 Design</td>
             <td>
-                
                 <a href="https://tailwindcss.com/">
                     <img src="https://img.shields.io/badge/Tailwind%20CSS-%2338B2AC.svg?style=for-the-badge&logo=tailwind-css&logoColor=white" alt="Tailwind CSS">
                 </a>
