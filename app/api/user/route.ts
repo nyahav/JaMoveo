@@ -7,6 +7,9 @@ const userSchema = z.object({
   userId: z.string().min(1, "User ID is required"),
   instrument: z.string().optional(),
   role: z.enum(["admin", "user"]).default("user"),
+}).refine(data => data.userId !== undefined, {
+  message: "User ID is required",
+  path: ["userId"],
 });
 
 const updateUserSchema = z.object({
@@ -48,8 +51,12 @@ export async function POST(request: Request) {
     const body = await request.json();
     const validatedData = userSchema.parse(body);
 
+    if (!validatedData.userId) {
+      return NextResponse.json({ error: "User ID is required" }, { status: 400 });
+    }
+    
     const newUser = await prisma.user.create({
-      data: validatedData,
+      data: { userId: validatedData.userId, instrument: validatedData.instrument, role: validatedData.role },
       select: {
         userId: true,
         role: true,

@@ -1,12 +1,10 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, Suspense } from 'react';
 import { useRouter, useSearchParams } from "next/navigation";
-
 import { useSocket } from "@/app/hooks/useSocket";
 import { useUserContext } from "@/app/context/UserContext";
 import { toast } from "react-hot-toast";
-
 
 interface SongLine {
   lyrics: string;
@@ -19,8 +17,8 @@ interface SongData {
   content: SongLine[][];
 }
 
-
-export default function LivePage() {
+// Create a separate component that uses useSearchParams
+function LivePageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const songName = searchParams.get('song');
@@ -33,38 +31,38 @@ export default function LivePage() {
   const [autoScroll, setAutoScroll] = useState(false);
   const [isVocalist, setIsVocalist] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+  /* eslint-disable @typescript-eslint/no-unused-vars */
   const [errorMessage, setErrorMessage] = useState<string>("");
-
-  
+  /* eslint-enable @typescript-eslint/no-unused-vars */
 
   // Player data functionality
-useEffect(() => {
-  if (!socket || userRole === 'admin') return;
+  useEffect(() => {
+    if (!socket || userRole === 'admin') return;
 
-  const handleSongData = (data: SongData) => {
-    console.log('Player received song data:', data);
-    if (data?.name && data?.artist && Array.isArray(data?.content)) {
-      setSongData({
-        name: data.name,
-        artist: data.artist,
-        content: data.content
-      });
-      setIsLoading(false);
-    }
-  };
+    const handleSongData = (data: SongData) => {
+      console.log('Player received song data:', data);
+      if (data?.name && data?.artist && Array.isArray(data?.content)) {
+        setSongData({
+          name: data.name,
+          artist: data.artist,
+          content: data.content
+        });
+        setIsLoading(false);
+      }
+    };
 
-  // Initial request for song data
-  console.log('Player requesting current song data');
-  socket.emit('request-song-data');
+    // Initial request for song data
+    console.log('Player requesting current song data');
+    socket.emit('request-song-data');
 
-  // Listen for song updates
-  socket.on('song-selected', handleSongData);
-  console.log('Player listening for song updates...');
+    // Listen for song updates
+    socket.on('song-selected', handleSongData);
+    console.log('Player listening for song updates...');
 
-  return () => {
-    socket.off('song-selected', handleSongData);
-  };
-}, [socket, userRole]);
+    return () => {
+      socket.off('song-selected', handleSongData);
+    };
+  }, [socket, userRole]);
 
   // Parse song data for admin
   useEffect(() => {
@@ -120,8 +118,6 @@ useEffect(() => {
     }
   }, [songName, userRole, socket]);
 
-  
-
   // Auto scroll functionality
   useEffect(() => {
     let scrollInterval: NodeJS.Timeout;
@@ -136,8 +132,6 @@ useEffect(() => {
 
     return () => clearInterval(scrollInterval);
   }, [autoScroll]);
-
-  
 
   // Handle quit session
   const handleQuit = () => {
@@ -174,7 +168,6 @@ useEffect(() => {
       <div className="min-h-screen bg-black text-white p-6 flex items-center justify-center flex-col">
         <div className="text-2xl mb-4">Waiting for song data...</div>
         <div className="text-gray-400">Please wait while the admin starts the session</div>
-        
       </div>
     );
   }
@@ -254,8 +247,6 @@ useEffect(() => {
           {isVocalist ? "Show Chords" : "Vocalist Mode"}
         </button>
 
-       
-
         {/* Admin Quit Button */}
         {userRole === "admin" && (
           <button
@@ -267,5 +258,23 @@ useEffect(() => {
         )}
       </div>
     </div>
+  );
+}
+
+// Loading fallback component
+function LoadingFallback() {
+  return (
+    <div className="min-h-screen bg-black text-white p-6 flex items-center justify-center flex-col">
+      <div className="text-2xl mb-4">Loading...</div>
+    </div>
+  );
+}
+
+// Main LivePage component that wraps the content in Suspense
+export default function LivePage() {
+  return (
+    <Suspense fallback={<LoadingFallback />}>
+      <LivePageContent />
+    </Suspense>
   );
 }

@@ -26,11 +26,11 @@ export default function HomePage() {
         Join the ultimate smart rehearsal experience with JaMoveo! <br />
         A web app that lets every musician connect, view chords and lyrics in real-time,<br />
         and take jam sessions to the next level.<br />
-        It's time to make music like never before!<br />
+        It&apos;s time to make music like never before!<br />
       </p>
       <AuthButton 
         className="h-16 px-8 text-2xl font-bold"
-        loggedOutText="Let's get Jamming"
+        loggedOutText="Let&apos;s get Jamming"
       />
       </MusicNotesHoverEffect>
     </div>

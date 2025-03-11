@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { useEffect, useState } from "react";
@@ -36,8 +37,9 @@ export default function MainPage() {
   const [loading, setLoading] = useState(true);
   //const [socket, setSocket] = useState<Socket | null>(null);
   const [adminConnected, setAdminConnected] = useState(false);
+/* eslint-disable @typescript-eslint/no-unused-vars */
   const [songSelected, setSongSelected] = useState(false);
-
+/* eslint-enable @typescript-eslint/no-unused-vars */
   useEffect(() => {
     if (!socket) return; // Exit if no socket
   
