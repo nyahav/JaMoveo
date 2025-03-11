@@ -1,6 +1,6 @@
 // app/layout.tsx
 import type { Metadata } from "next";
-import { Inter, Lato, Montserrat, Open_Sans, Playfair, Poppins, Raleway, Roboto } from "next/font/google";
+import {  Lato, Montserrat, Open_Sans, Playfair, Poppins, Raleway, Roboto } from "next/font/google";
 import "./globals.css";
 import RootLayoutClient from "./layout-client";
 

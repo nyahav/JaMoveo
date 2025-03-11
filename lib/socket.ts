@@ -18,7 +18,7 @@ export function initSocketIO(httpServer: HTTPServer) {
         console.log('Client connected:', socket.id);
   
         socket.on('admin-connected', (data) => {
-          console.log('Admin connected:', socket.id);
+          console.log('Admin connected:', socket.id,data);
           socket.data.isAdmin = true;
           io?.emit('admin-status', { connected: true });
         });

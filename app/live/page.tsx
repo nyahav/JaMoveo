@@ -2,11 +2,11 @@
 
 import { useEffect, useState, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useUser } from "@clerk/nextjs";
+
 import { useSocket } from "@/app/hooks/useSocket";
 import { useUserContext } from "@/app/context/UserContext";
 import { toast } from "react-hot-toast";
-import useSongStore from "../hooks/useSongStore";
+
 
 interface SongLine {
   lyrics: string;
@@ -24,17 +24,17 @@ export default function LivePage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const songName = searchParams.get('song');
-  const { user } = useUser();
+
   const socket = useSocket();
   const { userRole } = useUserContext();
   const [songData, setSongData] = useState<SongData | null>(null);
-  const { songStore } = useSongStore();
+
   const [isLoading, setIsLoading] = useState(true);
   const [autoScroll, setAutoScroll] = useState(false);
   const [isVocalist, setIsVocalist] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const [errorMessage, setErrorMessage] = useState<string>("");
-  const{ setSongStore } =useSongStore();
+
   
 
   // Player data functionality
@@ -99,7 +99,7 @@ useEffect(() => {
         console.log('Formatted song data to be emitted:', formattedSongData);
   
         setSongData(formattedSongData);
-        setSongStore(formattedSongData);
+     
         setIsLoading(false);
 
         const handleSongDataRequest = () => {

@@ -1,15 +1,14 @@
-import { MdElectricBolt } from "react-icons/md";
-import { useEffect, useState } from 'react';
+
+
 
 // @ts-ignore
-import { BoomBox, LayoutDashboard } from "lucide-react"; 
-import { Button } from "@/components/ui/button";
-import { useRouter } from "next/navigation";
+import { useEffect, useState } from 'react';
 import { UserButton, useUser } from "@clerk/nextjs";
 import Link from "next/link";
 import { AuthButton } from "@/app/(auth)/authButton";
 import { useUserContext } from "@/app/context/UserContext";
 import MusicNotesHoverEffect from "@/components/ui/effects/musicNotesHoverEffects";
+import Image from "next/image";
 
 export default function Navbar() {
   const [isMounted, setIsMounted] = useState(false);
@@ -44,9 +43,7 @@ export default function Navbar() {
     );
   };
   
-  interface NavigationProps {
-    userRole: string; // Add the appropriate type for userRole if needed
-  }
+
   
   return (
     <div className="flex m-5 mx-8 items-center justify-between flex-wrap">
@@ -80,7 +77,7 @@ function AppLogo() {
       <div className="flex items-center justify-between space-x-2 mt-1">
         <div className="flex gap-2 items-center">
           <div className="w-12 h-12 md:w-15 md:h-15 bg-primary rounded-xl flex items-center justify-center">
-            <img src="/favicon.ico" alt="App Icon" className="w-12 h-12 md:w-15 md:h-15" />
+            <Image src="/favicon.ico" alt="App Icon" className="w-12 h-12 md:w-15 md:h-15" />
           </div>
           <h1 className="text-[16px] flex gap-1 max-md:hidden md:text-[20px]">
             <Link href="/" className="hover:underline">

@@ -1,12 +1,12 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
+
+
 import { AuthButton } from "../(auth)/authButton";
 import MusicNotesHoverEffect from "@/components/ui/effects/musicNotesHoverEffects";
 
 export default function HomePage() {
-  const router = useRouter();
+ 
 
   return (
     <div className="flex flex-col items-center justify-center text-center py-20 px-4 mt-20 md:mt-36">

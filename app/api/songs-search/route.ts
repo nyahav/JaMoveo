@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import * as cheerio from 'cheerio';
 import axios from 'axios';
-import { SongData,SongDetails } from '@/app/types';
+import { SongData } from '@/app/types';
 
 export async function GET(request: Request) {
   try {

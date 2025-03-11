@@ -3,10 +3,9 @@
 import { useEffect, useState } from "react";
 import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
-import { io, Socket } from "socket.io-client";
-import { Button } from "@/components/ui/button";
 import { useSocket } from '@/app/hooks/useSocket';
 import MusicNotesLoadingAnimation from "@/components/ui/effects/musicNoteLoadingAnimation";
+import Image from "next/image";
 
 interface UserData {
     userId: string;
@@ -167,8 +166,8 @@ export default function MainPage() {
           .filter(instrument => instrument.name === userData.instrument)
           .map(instrument => (
             <div key={instrument.name} className="mt-4 text-xl">
-              <img
-                src={instrument.image}
+              <Image
+                src={instrument.image|| "/default-image-path.svg"}
                 alt={instrument.name}
                 className="w-32 h-32 object-contain rounded-md mb-2"
               />
@@ -187,8 +186,8 @@ export default function MainPage() {
                 className="card p-4 border rounded-lg shadow-md hover:scale-105 transform transition duration-200"
                 onClick={() => handleSelectInstrument(instrument.name)}
               >
-                <img
-                  src={instrument.image}
+                <Image
+                  src={instrument.image|| "/default-image-path.svg"}
                   alt={instrument.name}
                   className="w-32 h-32 object-contain rounded-md mb-2"
                 />

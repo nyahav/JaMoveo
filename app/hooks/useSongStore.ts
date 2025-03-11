@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { SongData, SongDetails } from '../types';
+import {  SongDetails } from '../types';
 
 
 interface SongStore {
