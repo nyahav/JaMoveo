@@ -36,11 +36,12 @@ export default function MainPage() {
   const router = useRouter();
   const socket = useSocket();
   const [userData, setUserData] = useState<UserData | null>(null);
+  /* eslint-disable @typescript-eslint/no-unused-vars */
   const [loading, setLoading] = useState(true);
   const { userRole, isLoaded } = useUserContext();
   //const [socket, setSocket] = useState<Socket | null>(null);
   const [adminConnected, setAdminConnected] = useState(false);
-/* eslint-disable @typescript-eslint/no-unused-vars */
+
   const [songSelected, setSongSelected] = useState(false);
 /* eslint-enable @typescript-eslint/no-unused-vars */
 
