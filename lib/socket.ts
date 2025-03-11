@@ -24,8 +24,8 @@ export function initSocketIO(httpServer: HTTPServer) {
         });
   
         socket.on('song-selected', (data) => {
-          console.log('Song selected:', data);
-          io?.emit('song-update', data);
+          console.log('Song selected socket:', data);
+          io?.emit('song-selected', data);
         });
   
         socket.on('disconnect', () => {

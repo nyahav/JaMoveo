@@ -40,41 +40,47 @@ export default function MainPage() {
   const [songSelected, setSongSelected] = useState(false);
 
   useEffect(() => {
-    if (socket) {
-      const checkAdminInterval = setInterval(() => {
-        console.log("Waiting for admin to connect...");
+    if (!socket) return; // Exit if no socket
   
-        socket.emit("check-admin-status");
+    console.log("Waiting for admin to connect...");
   
-        socket.on('admin-status', (data) => {
-            setAdminConnected(true);
-            console.log('Player received admin status:', data);
-            clearInterval(checkAdminInterval); 
-          });
-
-        socket.on("admin-connected", () => {
-          setAdminConnected(true);
-          console.log("Admin is connected!");
-          clearInterval(checkAdminInterval); 
-        });
-      }, 2000); // Adjust interval time as needed
+    const checkAdminInterval = setInterval(() => {
+      socket.emit("check-admin-status");
+    }, 5000); // Check every 5s (adjust as needed)
   
-      socket.on('song-update', (data) => {
-        console.log('Player received song update:', data);
-        if (data.redirect) {
-          setTimeout(() => {
-            router.push(`/live?song=${encodeURIComponent(data.name)}`);
-          }, 2000); 
-        }
-      });
+    // Handle admin status
+    const handleAdminStatus = (data: any) => {
+      setAdminConnected(true);
+      console.log("Player received admin status:", data);
+      clearInterval(checkAdminInterval); // Stop checking once admin is connected
+    };
   
-      return () => {
-        socket?.off('song-update');
-        socket?.off("admin-connected");
-        clearInterval(checkAdminInterval);
-      };
+    // Handle song updates
+    const handleSongSelected = (data: any) => {
+      console.log("Player received song update:", data);
+      if (data) {
+        setTimeout(() => {
+          router.push(`/live?song=${encodeURIComponent(JSON.stringify(data))}`);
+        }, 2000);
+      }
+    };
+    const handleSongSelectedLive = (data: any) => {
+      console.log("Player received song update:", data);    
+      router.push(`/live`);
     }
+    socket.on("admin-status", handleAdminStatus);
+    //socket.on("song-selected", handleSongSelected);
+    socket.on("live-player", handleSongSelectedLive);
+    
+  
+    return () => {
+      console.log("Cleaning up socket listeners and intervals...");
+      socket.off("admin-status", handleAdminStatus);
+      socket.off("song-selected", handleSongSelected);
+      clearInterval(checkAdminInterval);
+    };
   }, [socket, router]);
+  
  
 
   useEffect(() => {

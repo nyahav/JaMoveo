@@ -5,8 +5,11 @@ export interface SongData {
   }
   
   export interface SongDetails {
-    title: string;
+    name: string;
     artist: string;
-    lyrics: string;
-    chords: string;
+    content: {
+      lyrics: string;
+      chords?: string;
+    }[][];
+    
   }

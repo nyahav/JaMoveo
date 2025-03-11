@@ -43,20 +43,36 @@ export function AuthButton({
   if (user) {
     return (
       <Button 
-        className={className}
+        className={`h-16 px-8 text-2xl bg-black border-4  font-bold transition-all duration-300 hover:brightness-90 ${className}`} 
         onClick={() => router.push(loggedInRoute)}
+        style={{
+          background:
+            "linear-gradient(90deg, hsl(192, 82.88%, 56.47%) 0%, hsl(192, 82.88%, 10%) 100%)",
+          WebkitBackgroundClip: "text",
+          color: "transparent",
+        }}
       >
         {children || loggedInText}
       </Button>
     );
   }
   
-  // If user is not logged in, show button that opens sign-in modal
+  // If user is not logged in, show sign-in button with gradient
   return (
     <SignInButton mode="modal">
-      <Button className={className}>
+      <Button 
+        className={`h-16 px-8 text-2xl bg-black border-4  font-bold transition-all duration-300 hover:brightness-90 ${className}`}
+        style={{
+          background:
+            "linear-gradient(90deg, hsl(192, 82.88%, 56.47%) 0%, hsl(192, 82.88%, 10%) 100%)",
+          WebkitBackgroundClip: "text",
+          color: "transparent",
+        }}
+      >
         {children || loggedOutText}
       </Button>
     </SignInButton>
   );
+  
+  
 }

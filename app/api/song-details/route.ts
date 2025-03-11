@@ -12,7 +12,7 @@ export async function GET(request: Request) {
     }
 
     const decodedUrl = decodeURIComponent(decodeURIComponent(encodedUrl)); // Double decode if needed
-    console.log('Fetching data from:', decodedUrl);
+    //console.log('Fetching data from:', decodedUrl);
 
     const { data } = await axios.get(decodedUrl);
     const $ = cheerio.load(data);
@@ -41,7 +41,7 @@ export async function GET(request: Request) {
         previousChords = chordsLine; // Store for the next lyrics line
       }
     });
-    console.log('songLines:', songLines);
+    //console.log('songLines:', songLines);
     return NextResponse.json({
       title,
       artist,

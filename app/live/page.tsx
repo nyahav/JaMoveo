@@ -1,14 +1,3 @@
-// Live Page:
-// ● Show title with the song name and the author.
-// ● Singers should see only the lyrics for the song.
-// ● Other players should see both lyrics and chords for the song.
-// ● Add a floating toggle button on the bottom to start/stop automatic
-// slow scrolling down.
-// ● Ensure a large font size and high contrast between background and
-// text color, as there is a lot of smoke in the room.
-// ● Only the admin can see the "Quit" button. Once clicked, all players,
-// including the admin, move back to the main page.
-
 "use client";
 
 import { useEffect, useState, useRef } from "react";
@@ -17,6 +6,7 @@ import { useUser } from "@clerk/nextjs";
 import { useSocket } from "@/app/hooks/useSocket";
 import { useUserContext } from "@/app/context/UserContext";
 import { toast } from "react-hot-toast";
+import useSongStore from "../hooks/useSongStore";
 
 interface SongLine {
   lyrics: string;
@@ -25,8 +15,10 @@ interface SongLine {
 
 interface SongData {
   name: string;
+  artist: string;
   content: SongLine[][];
 }
+
 
 export default function LivePage() {
   const router = useRouter();
@@ -36,30 +28,99 @@ export default function LivePage() {
   const socket = useSocket();
   const { userRole } = useUserContext();
   const [songData, setSongData] = useState<SongData | null>(null);
+  const { songStore } = useSongStore();
+  const [isLoading, setIsLoading] = useState(true);
   const [autoScroll, setAutoScroll] = useState(false);
-  const containerRef = useRef<HTMLDivElement>(null);
   const [isVocalist, setIsVocalist] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [errorMessage, setErrorMessage] = useState<string>("");
+  const{ setSongStore } =useSongStore();
+  
 
+  // Player data functionality
+useEffect(() => {
+  if (!socket || userRole === 'admin') return;
 
-  useEffect(() => {
-    // Get user instrument from API
-    fetch(`/api/user?userId=${user?.id}`)
-      .then(res => res.json())
-      .then(data => {
-        setIsVocalist(data.instrument === 'Vocals');
+  const handleSongData = (data: SongData) => {
+    console.log('Player received song data:', data);
+    if (data?.name && data?.artist && Array.isArray(data?.content)) {
+      setSongData({
+        name: data.name,
+        artist: data.artist,
+        content: data.content
       });
-
-    // Fetch song data
-    if (songName) {
-      fetch(`/api/songs?search=${encodeURIComponent(songName)}`)
-        .then(res => res.json())
-        .then(data => {
-          if (data[0]) {
-            setSongData(data[0]);
-          }
-        });
+      setIsLoading(false);
     }
-  }, [songName, user?.id]);
+  };
+
+  // Initial request for song data
+  console.log('Player requesting current song data');
+  socket.emit('request-song-data');
+
+  // Listen for song updates
+  socket.on('song-selected', handleSongData);
+  console.log('Player listening for song updates...');
+
+  return () => {
+    socket.off('song-selected', handleSongData);
+  };
+}, [socket, userRole]);
+
+  // Parse song data for admin
+  useEffect(() => {
+    if (!songName || userRole !== 'admin') return;
+    if (!socket) {
+      console.warn("Socket not available yet, waiting...");
+      return;
+    }
+  
+    try {
+      if (songName.includes('{')) {
+        
+        const parsedSongDetails = JSON.parse(decodeURIComponent(songName));
+  
+        const artist = parsedSongDetails.artist;
+        const title = parsedSongDetails.name || parsedSongDetails.title;
+        const lyricsAndChords = parsedSongDetails.lyricsAndChords;
+  
+        const cleanArtist = artist?.split('-')[0].trim() || 'Unknown Artist';
+        const cleanTitle = title?.split('אקורדים לשיר')[1]?.split('של')[0].trim() || title || 'Untitled';
+  
+        const formattedContent = Array.isArray(lyricsAndChords)
+          ? lyricsAndChords.map(item => [{ lyrics: item.lyrics || '', chords: item.chords || '' }])
+          : [];
+  
+        const formattedSongData = {
+          name: cleanTitle,
+          artist: cleanArtist,
+          content: formattedContent
+        };
+  
+        console.log('Formatted song data to be emitted:', formattedSongData);
+  
+        setSongData(formattedSongData);
+        setSongStore(formattedSongData);
+        setIsLoading(false);
+
+        const handleSongDataRequest = () => {
+          console.log('Admin received song data request');
+          socket.emit('song-selected', formattedSongData);
+        };
+      
+        socket.on('request-song-data', handleSongDataRequest);
+
+        if (socket) {
+          console.log('Live Admin emitting selected song:', formattedSongData);
+          socket.emit('song-selected', formattedSongData);
+        }
+      } 
+    } catch (error) {
+      console.error('Error parsing song details:', error);
+      setErrorMessage(`Error parsing song data: ${(error as Error).message}`);
+    }
+  }, [songName, userRole, socket]);
+
+  
 
   // Auto scroll functionality
   useEffect(() => {
@@ -75,6 +136,8 @@ export default function LivePage() {
 
     return () => clearInterval(scrollInterval);
   }, [autoScroll]);
+
+  
 
   // Handle quit session
   const handleQuit = () => {
@@ -100,53 +163,75 @@ export default function LivePage() {
     };
   }, [socket, router, userRole]);
 
-  if (!songData) return <div>Loading...</div>;
+  // Toggle vocalist mode
+  const toggleVocalistMode = () => {
+    setIsVocalist(!isVocalist);
+  };
+
+  // Loading state
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-black text-white p-6 flex items-center justify-center flex-col">
+        <div className="text-2xl mb-4">Waiting for song data...</div>
+        <div className="text-gray-400">Please wait while the admin starts the session</div>
+        
+      </div>
+    );
+  }
+
+  // Missing data state
+  if (!songData?.content || !Array.isArray(songData.content)) {
+    return (
+      <div className="min-h-screen bg-black text-white p-6 flex items-center justify-center flex-col">
+        <div className="text-2xl mb-4">Error loading song</div>
+        <div className="text-red-500">
+          Unable to load song data. Please try rejoining the session.
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-black text-white p-6">
-      {/* Song Title */}
-      <h1 className="text-5xl font-bold mb-8 text-center">
-        {songData.name}
-      </h1>
+      {/* Title and Artist */}
+      <div className="text-center mb-8">
+        <h1 className="text-5xl font-bold mb-2">{songData.name || 'Loading...'}</h1>
+        <h2 className="text-3xl text-gray-400">{songData.artist || ''}</h2>
+      </div>
 
       {/* Lyrics and Chords */}
       <div
         ref={containerRef}
         className="w-full max-w-4xl mx-auto h-[70vh] overflow-y-auto text-2xl leading-relaxed"
       >
-        {songData?.content.map((line, lineIndex) => (
+        {songData.content.map((line, lineIndex) => (
           <div key={lineIndex} className="mb-8">
             {/* Chords line */}
-            {!isVocalist && (
+            {!isVocalist && line[0]?.chords && (
               <div className="h-6 mb-1">
-                {line.map((part, partIndex) => (
-                  <span
-                    key={`chord-${partIndex}`}
-                    className="inline-block text-orange-500"
-                    style={{
-                      width: part.lyrics.length * 16, // Approximate width based on lyrics
-                      marginRight: '4px',
-                      textAlign: part.chords ? 'center' : 'left'
-                    }}
-                  >
-                    {part.chords || ''}
-                  </span>
-                ))}
+                <span
+                  className="inline-block text-orange-500"
+                  style={{
+                    marginRight: '4px',
+                    textAlign: 'left'
+                  }}
+                >
+                  {line[0].chords}
+                </span>
               </div>
             )}
 
             {/* Lyrics line */}
-            <div>
-              {line.map((part, partIndex) => (
+            {line[0]?.lyrics && (
+              <div>
                 <span
-                  key={`lyric-${partIndex}`}
                   className="inline-block text-yellow-300"
                   style={{ marginRight: '4px' }}
                 >
-                  {part.lyrics}
+                  {line[0].lyrics}
                 </span>
-              ))}
-            </div>
+              </div>
+            )}
           </div>
         ))}
       </div>
@@ -161,6 +246,16 @@ export default function LivePage() {
           {autoScroll ? "Stop Scroll" : "Auto Scroll"}
         </button>
 
+        {/* Vocalist Mode Toggle Button */}
+        <button
+          onClick={toggleVocalistMode}
+          className="p-4 bg-purple-600 rounded-full text-white text-xl shadow-lg hover:bg-purple-700 transition"
+        >
+          {isVocalist ? "Show Chords" : "Vocalist Mode"}
+        </button>
+
+       
+
         {/* Admin Quit Button */}
         {userRole === "admin" && (
           <button
@@ -171,9 +266,6 @@ export default function LivePage() {
           </button>
         )}
       </div>
-
-
-
     </div>
   );
 }
