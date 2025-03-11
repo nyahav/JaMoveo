@@ -1,6 +1,20 @@
 import React from 'react';
 import TechnologyCard from '@/components/layout/technologyCard';
+import { FaReact, FaJs, FaCss3Alt, FaNodeJs,FaCogs } from 'react-icons/fa';
+import { SiNextdotjs, SiTailwindcss, SiClerk, SiZod,  SiRadixui } from 'react-icons/si';
+import { MdOutlineSuperscript } from 'react-icons/md';
 
+const technologyIcons = {
+  'Next.js': <SiNextdotjs size={40} />,
+  React: <FaReact size={40} />,
+  'Tailwind CSS': <SiTailwindcss size={40} />,
+  Clerk: <SiClerk size={40} />,
+  Zod: <SiZod size={40} />,
+  Zustand: <FaCogs size={40} />,
+  'Lucide React': <FaJs size={40} />, // Assuming a generic JS logo here; you can pick a different one
+  'Radix UI': <SiRadixui size={40} />,
+  TypeScript: <MdOutlineSuperscript size={40} />,
+};
 const technologies = [
   {
     name: 'Next.js',
@@ -61,7 +75,16 @@ export default function Page() {
       <h1 className="text-3xl font-bold mb-8 text-center mx-auto">Technologies We Used in this App</h1>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {technologies.map((tech) => (
-          <TechnologyCard key={tech.name} {...tech} />
+          <div key={tech.name} className="p-4 border rounded-lg shadow-md">
+            <div className="text-center mb-4">
+              {technologyIcons[tech.name]}
+            </div>
+            <h2 className="text-xl font-semibold">{tech.name}</h2>
+            <p>{tech.description}</p>
+            <a href={tech.link} className="text-blue-500 mt-2 block" target="_blank" rel="noopener noreferrer">
+              Learn more
+            </a>
+          </div>
         ))}
       </div>
     </div>

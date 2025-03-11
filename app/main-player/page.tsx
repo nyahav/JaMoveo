@@ -197,8 +197,8 @@ useEffect(() => {
       {/* Check if the user has selected an instrument */}
     {userData.instrument ? (
       <div>
-        <h1>Welcome!</h1>
-        <p>Your Instrument: {userData.instrument}</p>
+        <h1 className="text-lg font-semibold">Welcome!</h1>
+        <p className="text-lg font-semibold">Your Instrument: {userData.instrument}</p>
         {instrumentOptions
           .filter(instrument => instrument.name === userData.instrument)
           .map(instrument => (
@@ -208,7 +208,7 @@ useEffect(() => {
                 alt={instrument.name}
                 className="w-32 h-32 object-contain rounded-md mb-2"
               />
-              <h3 className="text-lg font-semibold">{instrument.name}</h3>
+              {/* <h3 className="text-lg font-semibold">{instrument.name}</h3> */}
             </div>
           ))}
       </div>

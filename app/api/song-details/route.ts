@@ -12,11 +12,11 @@ export async function GET(request: Request) {
     }
 
     const decodedUrl = decodeURIComponent(decodeURIComponent(encodedUrl)); // Double decode if needed
-    //console.log('Fetching data from:', decodedUrl);
+    
 
     const { data } = await axios.get(decodedUrl);
     const $ = cheerio.load(data);
-
+   
     console.log('Fetched data successfully');
 
     // Extract title and artist
