@@ -1,6 +1,6 @@
 import React from 'react';
 import TechnologyCard from '@/components/layout/technologyCard';
-import { FaReact, FaJs, FaCss3Alt, FaNodeJs,FaCogs } from 'react-icons/fa';
+import { FaReact, FaJs, FaCogs } from 'react-icons/fa';
 import { SiNextdotjs, SiTailwindcss, SiClerk, SiZod,  SiRadixui } from 'react-icons/si';
 import { MdOutlineSuperscript } from 'react-icons/md';
 
@@ -75,16 +75,13 @@ export default function Page() {
       <h1 className="text-3xl font-bold mb-8 text-center mx-auto">Technologies We Used in this App</h1>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {technologies.map((tech) => (
-          <div key={tech.name} className="p-4 border rounded-lg shadow-md">
-            <div className="text-center mb-4">
-              {technologyIcons[tech.name]}
-            </div>
-            <h2 className="text-xl font-semibold">{tech.name}</h2>
-            <p>{tech.description}</p>
-            <a href={tech.link} className="text-blue-500 mt-2 block" target="_blank" rel="noopener noreferrer">
-              Learn more
-            </a>
-          </div>
+          <TechnologyCard
+            key={tech.name}
+            name={tech.name}
+            description={tech.description}
+            link={tech.link}
+            icon={technologyIcons[tech.name as keyof typeof technologyIcons]}
+          />
         ))}
       </div>
     </div>
