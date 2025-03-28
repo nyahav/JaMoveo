@@ -1,6 +1,6 @@
 # JaMoveo – Jam at the Speed of Sound! 🎵🚀
 
-Welcome to **JaMoveo**, the ultimate interactive band rehearsal web app! Take your jam sessions to the next level with real-time lyrics and chord displays, seamless collaboration, and an intuitive interface designed for musicians.
+Welcome to **JaMoveo**, the ultimate interactive band rehearsal web app! Take your jam sessions to the next level with real-time lyrics and chord displays, seamless collaboration, and an intuitive interface for musicians.
 
 
 ## 🚀 How to Use the App
