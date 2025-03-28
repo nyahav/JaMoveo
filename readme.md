@@ -217,4 +217,4 @@ Project developed by **[Yahav Nir](https://github.com/YOUR-GITHUB)**. Feel free 
 
 ---
 
-Enjoy jamming with **JaMoveo**! 🚀🎶
+Enjoy jamming with **JaMoveo**!! 🚀🎶
