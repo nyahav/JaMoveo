@@ -6,9 +6,10 @@
   "scripts": {
     "dev": "node --loader ts-node/esm server.ts",
     "build": "next build",
-    "start": "cross-env NODE_ENV=production node --loader ts-node/esm server.ts",
+    "start": "NODE_ENV=production node --loader ts-node/esm server.ts",
     "postinstall": "prisma generate",
-    "lint": "next lint",
+    "prisma:migrate": "prisma migrate deploy",
+    "lint": "next lint"
   },
   "dependencies": {
     "@clerk/clerk-sdk-node": "^5.1.6",
